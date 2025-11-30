@@ -1,0 +1,5 @@
+# Ignorar dependências do Node node_modules/ 
+# Ignorar o arquivo de variáveis de ambiente com dados sensíveis .env
+
+Node node_modules/
+.env

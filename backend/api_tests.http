@@ -1,0 +1,91 @@
+### Criar uma nova empresa
+POST http://localhost:3001/api/companies
+Content-Type: application/json
+
+{
+  "nome": "Imobiliária SaaS do Futuro",
+  "cnpj": "99.888.777/0001-55"
+}
+
+### ------------------------------------
+### Listar todas as empresas
+GET http://localhost:3001/api/companies
+
+### Listar uma única empresa pelo ID
+# Substitua '1' pelo ID de uma empresa que realmente exista no seu banco
+GET http://localhost:3001/api/companies/1
+
+### Tentar listar uma empresa que não existe
+GET http://localhost:3001/api/companies/999
+
+### Atualizar uma empresa existente
+# Substitua '1' pelo ID da empresa que você quer atualizar
+PUT http://localhost:3001/api/companies/1
+Content-Type: application/json
+
+{
+  "nome": "Nome Atualizado da Imobiliária",
+  "cnpj": "11.222.333/0001-44"
+}
+
+### Deletar uma empresa existente
+# Substitua '1' pelo ID da empresa que você quer deletar
+DELETE http://localhost:3001/api/companies/1
+
+
+###
+### ------------------ TESTES DE USUÁRIOS ------------------
+###
+
+### Criar um novo usuário
+# Certifique-se de que o 'empresa_id' 1 existe no seu banco!
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "nome": "hash",
+  "email": "hash@email.com",
+  "senha": "minhaSenhaForte123",
+  "empresa_id": 2
+}
+
+### Listar todos os usuários
+GET http://localhost:3001/api/users
+
+### Listar um único usuário pelo ID
+GET http://localhost:3001/api/users/4
+
+### Atualizar um usuário existente
+PUT http://localhost:3001/api/users/4
+Content-Type: application/json
+
+{
+  "nome": "Marco Chagas (Nome ATUALIZADO)",
+  "email": "marco.chagas.novo@email.com"
+}
+
+### Deletar um usuário existente
+DELETE http://localhost:3001/api/users/4
+
+###
+### ------------------ TESTES DE AUTENTICAÇÃO ------------------
+###
+
+### Realizar login com usuário existente
+# Use o email e a senha do usuário que você criou com a senha hasheada
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "seguro@email.com",
+  "senha": "senhaSuperSecreta"
+}
+
+### TENTAR DELETAR EMPRESA SEM AUTORIZAÇÃO
+# Esta requisição DEVE FALHAR com erro 401
+DELETE http://localhost:3001/api/companies/2 
+
+### DELETAR EMPRESA COM AUTORIZAÇÃO
+# Substitua <SEU_TOKEN_AQUI> pelo token que você copiou do login
+DELETE http://localhost:3001/api/companies/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJzZWd1cm9AZW1haWwuY29tIiwibm9tZSI6IlVzdWFyaW8gU2VndXJvIiwiaWF0IjoxNzY0MjU2MTM0LCJleHAiOjE3NjQyODQ5MzR9.qLR7Y7aVATjuXBN3t0jL0CKYKXjPpvXZZYv5MpjjK8E
