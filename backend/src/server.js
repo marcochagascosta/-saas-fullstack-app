@@ -1,28 +1,38 @@
-require('dotenv').config();
-// Arquivo principal do backend agora
+// Importando as ferramentas necessárias
 const express = require('express');
-// ... resto do código
-const cors = require('cors'); 
-const db = require('./config/database');
+const { PrismaClient } = require('@prisma/client');
 
-// Importa as rotas
-const companyRoutes = require('./routes/companyRoutes');
-const userRoutes = require('./routes/userRoutes'); 
-const authRoutes = require('./routes/authRoutes'); 
+// --- A CORREÇÃO PARA O PRISMA 7 ESTÁ AQUI ---
+// Iniciamos o Prisma Client passando a URL do banco de dados explicitamente.
+// Ele vai ler a variável 'DATABASE_URL' do nosso arquivo .env
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL,
+    },
+  },
+});
 
+// Criando a aplicação web com o Express
 const app = express();
-const PORT = process.env.PORT || 3001;
+const port = 3001; // A porta onde nosso backend vai rodar
 
-app.use(cors());
-app.use(express.json());
+// Uma rota de teste para sabermos que o servidor está no ar
+app.get('/', (req, res) => {
+  res.send('Nosso backend está funcionando!');
+});
 
-app.get('/', (req, res) => { /* ... */ });
+// Uma rota de exemplo para buscar todos os usuários (para testar o Prisma)
+app.get('/users', async (req, res) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar usuários.' });
+  }
+});
 
-// Registra as rotas
-app.use('/api/companies', companyRoutes);
-app.use('/api/users', userRoutes); 
-app.use('/api/auth', authRoutes); 
-
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
+// Iniciando o servidor
+app.listen(port, () => {
+  console.log(`Servidor backend rodando em http://localhost:${port}`);
 });
