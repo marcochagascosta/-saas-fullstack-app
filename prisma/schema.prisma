@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// DEFINA AQUI OS SEUS MODELOS
+// Abaixo está um exemplo para um SaaS de assinatura
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  name          String?  // O '?' significa que este campo é opcional
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Isso cria a relação com o modelo de Assinatura
+  subscription  Subscription?
+}
+
+model Subscription {
+  id            Int      @id @default(autoincrement())
+  status        String   // ex: "active", "canceled", "trialing"
+  
+  // Relação com o usuário
+  userId        Int      @unique // Garante que um usuário só tenha uma assinatura
+  user          User     @relation(fields: [userId], references: [id])
+  
+  // Campos de data importantes
+  currentPeriodEnd DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
