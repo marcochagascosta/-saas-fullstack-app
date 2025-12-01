@@ -1,5 +1,5 @@
 require('dotenv').config();
-// Arquivo principal do backend
+// Arquivo principal do backend agora
 const express = require('express');
 // ... resto do código
 const cors = require('cors'); 
